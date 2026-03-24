@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "https://esm.sh/resend@2.0.0";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
@@ -7,6 +8,15 @@ const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
+
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#x27;");
+}
 
 interface ReplyRequest {
   to_email: string;
@@ -22,14 +32,60 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
+    // Verify admin authentication
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json", ...corsHeaders },
+      });
+    }
+
+    const supabase = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_ANON_KEY")!,
+      { global: { headers: { Authorization: authHeader } } }
+    );
+
+    const { data: claims, error: claimsError } = await supabase.auth.getClaims(
+      authHeader.replace("Bearer ", "")
+    );
+
+    if (claimsError || !claims?.claims) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401,
+        headers: { "Content-Type": "application/json", ...corsHeaders },
+      });
+    }
+
+    // Verify admin role
+    const userId = claims.claims.sub as string;
+    const { data: isAdmin } = await supabase.rpc("has_role", {
+      _user_id: userId,
+      _role: "admin",
+    });
+    const { data: isHardcodedAdmin } = await supabase.rpc("is_hardcoded_admin");
+
+    if (!isAdmin && !isHardcodedAdmin) {
+      return new Response(JSON.stringify({ error: "Forbidden: admin access required" }), {
+        status: 403,
+        headers: { "Content-Type": "application/json", ...corsHeaders },
+      });
+    }
+
     const { to_email, to_name, subject, original_message, reply_message }: ReplyRequest = await req.json();
 
     console.log("Sending reply to:", to_email);
 
+    const safeName = escapeHtml(to_name);
+    const safeSubject = escapeHtml(subject);
+    const safeReply = escapeHtml(reply_message).replace(/\n/g, "<br>");
+    const safeOriginal = escapeHtml(original_message);
+
     const emailResponse = await resend.emails.send({
       from: "Dunne's Institute <onboarding@resend.dev>",
       to: [to_email],
-      subject: `Re: ${subject}`,
+      subject: `Re: ${safeSubject}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <div style="background-color: #1e3a5f; padding: 20px; text-align: center;">
@@ -38,16 +94,16 @@ const handler = async (req: Request): Promise<Response> => {
           </div>
           
           <div style="padding: 30px; background-color: #ffffff;">
-            <p style="color: #333;">Dear ${to_name},</p>
+            <p style="color: #333;">Dear ${safeName},</p>
             
-            <p style="color: #333; line-height: 1.6;">${reply_message.replace(/\n/g, '<br>')}</p>
+            <p style="color: #333; line-height: 1.6;">${safeReply}</p>
             
             <hr style="border: none; border-top: 1px solid #e5e5e5; margin: 30px 0;" />
             
             <p style="color: #666; font-size: 12px;">Your original enquiry:</p>
             <div style="background-color: #f5f5f5; padding: 15px; border-left: 3px solid #1e3a5f; margin: 10px 0;">
-              <p style="color: #666; font-size: 13px; margin: 0;"><strong>Subject:</strong> ${subject}</p>
-              <p style="color: #666; font-size: 13px; margin: 10px 0 0 0;">${original_message}</p>
+              <p style="color: #666; font-size: 13px; margin: 0;"><strong>Subject:</strong> ${safeSubject}</p>
+              <p style="color: #666; font-size: 13px; margin: 10px 0 0 0;">${safeOriginal}</p>
             </div>
           </div>
           

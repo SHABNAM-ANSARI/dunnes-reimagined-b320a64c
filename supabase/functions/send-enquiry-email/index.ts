@@ -8,6 +8,15 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#x27;");
+}
+
 interface EnquiryRequest {
   name: string;
   email: string;
@@ -26,19 +35,24 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Sending enquiry notification for:", name, email);
 
-    // Send notification to school
+    const safeName = escapeHtml(name);
+    const safeEmail = escapeHtml(email);
+    const safePhone = escapeHtml(phone || "Not provided");
+    const safeSubject = escapeHtml(subject);
+    const safeMessage = escapeHtml(message);
+
     const emailResponse = await resend.emails.send({
       from: "Dunne's Institute <onboarding@resend.dev>",
       to: ["dunnesschool@gmail.com"],
-      subject: `New Enquiry: ${subject}`,
+      subject: `New Enquiry: ${safeSubject}`,
       html: `
         <h2>New Enquiry Received</h2>
-        <p><strong>From:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Phone:</strong> ${phone || "Not provided"}</p>
-        <p><strong>Subject:</strong> ${subject}</p>
+        <p><strong>From:</strong> ${safeName}</p>
+        <p><strong>Email:</strong> ${safeEmail}</p>
+        <p><strong>Phone:</strong> ${safePhone}</p>
+        <p><strong>Subject:</strong> ${safeSubject}</p>
         <h3>Message:</h3>
-        <p>${message}</p>
+        <p>${safeMessage}</p>
         <hr />
         <p style="color: #666; font-size: 12px;">
           This enquiry was submitted via the Dunne's Institute website.
