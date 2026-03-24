@@ -121,7 +121,12 @@ export function Header() {
               {navigation.map(item => <Link key={item.name} to={item.href} className={cn("block px-4 py-3 rounded-md text-sm font-medium transition-colors", location.pathname === item.href ? "bg-primary text-primary-foreground" : "text-foreground hover:bg-muted")} onClick={() => setMobileMenuOpen(false)}>
                   {item.name}
                 </Link>)}
-              <Button asChild className="w-full mt-4 bg-secondary hover:bg-secondary/90 text-secondary-foreground">
+              <Button asChild variant="outline" className="w-full border-primary text-primary">
+                <Link to="/parent" onClick={() => setMobileMenuOpen(false)}>
+                  Parent Login
+                </Link>
+              </Button>
+              <Button asChild className="w-full mt-2 bg-secondary hover:bg-secondary/90 text-secondary-foreground">
                 <Link to="/contact" onClick={() => setMobileMenuOpen(false)}>
                   Enquire Now
                 </Link>
