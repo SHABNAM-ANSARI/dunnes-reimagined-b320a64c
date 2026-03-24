@@ -13,6 +13,8 @@ import Contact from "./pages/Contact";
 import Gallery from "./pages/Gallery";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
+import ParentLogin from "./pages/ParentLogin";
+import ParentProfile from "./pages/ParentProfile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
