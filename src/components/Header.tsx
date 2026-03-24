@@ -100,6 +100,9 @@ export function Header() {
 
             {/* CTA Button */}
             <div className="hidden lg:flex items-center gap-4">
+              <Button asChild variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
+                <Link to="/parent">Parent Login</Link>
+              </Button>
               <Button asChild className="bg-secondary hover:bg-secondary/90 text-secondary-foreground shadow-gold">
                 <Link to="/contact">Enquire Now</Link>
               </Button>
