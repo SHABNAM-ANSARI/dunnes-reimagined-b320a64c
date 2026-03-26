@@ -14,6 +14,74 @@ export type Database = {
   }
   public: {
     Tables: {
+      announcements: {
+        Row: {
+          class_name: string
+          content: string
+          created_at: string
+          id: string
+          teacher_mobile: string
+          teacher_name: string
+          title: string
+          type: Database["public"]["Enums"]["announcement_type"]
+        }
+        Insert: {
+          class_name?: string
+          content: string
+          created_at?: string
+          id?: string
+          teacher_mobile: string
+          teacher_name?: string
+          title: string
+          type?: Database["public"]["Enums"]["announcement_type"]
+        }
+        Update: {
+          class_name?: string
+          content?: string
+          created_at?: string
+          id?: string
+          teacher_mobile?: string
+          teacher_name?: string
+          title?: string
+          type?: Database["public"]["Enums"]["announcement_type"]
+        }
+        Relationships: []
+      }
+      attendance: {
+        Row: {
+          created_at: string
+          date: string
+          id: string
+          marked_by: string
+          status: string
+          student_id: string
+        }
+        Insert: {
+          created_at?: string
+          date?: string
+          id?: string
+          marked_by?: string
+          status?: string
+          student_id: string
+        }
+        Update: {
+          created_at?: string
+          date?: string
+          id?: string
+          marked_by?: string
+          status?: string
+          student_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attendance_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "students"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       gallery_photos: {
         Row: {
           category: Database["public"]["Enums"]["gallery_category"]
@@ -122,6 +190,33 @@ export type Database = {
         }
         Relationships: []
       }
+      teachers: {
+        Row: {
+          class_assigned: string
+          created_at: string
+          id: string
+          mobile: string
+          name: string
+          subject: string
+        }
+        Insert: {
+          class_assigned?: string
+          created_at?: string
+          id?: string
+          mobile: string
+          name: string
+          subject?: string
+        }
+        Update: {
+          class_assigned?: string
+          created_at?: string
+          id?: string
+          mobile?: string
+          name?: string
+          subject?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -162,6 +257,7 @@ export type Database = {
       }
     }
     Enums: {
+      announcement_type: "daily" | "subject_update" | "general"
       app_role: "admin" | "moderator" | "user"
       gallery_category:
         | "events"
@@ -297,6 +393,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      announcement_type: ["daily", "subject_update", "general"],
       app_role: ["admin", "moderator", "user"],
       gallery_category: [
         "events",
