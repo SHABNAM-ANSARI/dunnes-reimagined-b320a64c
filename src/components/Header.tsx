@@ -81,7 +81,7 @@ export function Header() {
             {/* Logo */}
             <Link to="/" className="flex items-center gap-3 group">
               <div className="relative">
-                <img src={schoolLogo} alt="Dunne's Institute Logo" className="w-14 h-14 object-contain rounded shadow-lg group-hover:shadow-xl transition-shadow" />
+                <img src={schoolLogo} alt="Dunne's Institute Logo" className="w-14 h-14 object-contain rounded-lg shadow-lg group-hover:shadow-xl transition-shadow" />
               </div>
               <div className="hidden sm:block">
                 <h1 className="font-heading text-xl md:text-2xl font-bold text-primary leading-tight">
