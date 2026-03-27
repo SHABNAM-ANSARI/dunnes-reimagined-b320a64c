@@ -69,15 +69,13 @@ export function ContactSection() {
                 <span>Mon - Sat: 8:00 AM - 3:00 PM</span>
               </div>
             </div>
-            <form name="contact" method="POST" data-netlify="true" className="mt-6 space-y-4">
-              <input type="hidden" name="form-name" value="contact" />
-              <input type="text" name="name" placeholder="Your Name" required className="w-full p-2 rounded border border-gray-300 bg-white text-black" />
-              <input type="email" name="email" placeholder="Your Email" required className="w-full p-2 rounded border border-gray-300 bg-white text-black" />
-              <textarea name="message" placeholder="How can we help?" required className="w-full p-2 rounded border border-gray-300 bg-white text-black h-24"></textarea>
-              <button type="submit" className="w-full bg-black text-white font-bold py-2 rounded hover:opacity-80 transition">
-                Submit Inquiry
-              </button>
-            </form>
+            <div className="mt-6">
+              <Link to="/contact">
+                <Button variant="secondary" className="w-full font-bold">
+                  Send Us an Enquiry <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
