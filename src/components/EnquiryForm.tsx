@@ -36,6 +36,7 @@ type EnquiryForm = z.infer<typeof enquirySchema>;
 
 export function EnquiryForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const { toast } = useToast();
 
   const form = useForm<EnquiryForm>({
@@ -52,7 +53,6 @@ export function EnquiryForm() {
   const onSubmit = async (data: EnquiryForm) => {
     setIsSubmitting(true);
     try {
-      // Insert into help_messages table
       const { error: dbError } = await supabase
         .from("help_messages")
         .insert({
@@ -65,7 +65,6 @@ export function EnquiryForm() {
 
       if (dbError) throw dbError;
 
-      // Send email notification via edge function
       const { error: emailError } = await supabase.functions.invoke("send-enquiry-email", {
         body: {
           name: data.name,
@@ -78,15 +77,10 @@ export function EnquiryForm() {
 
       if (emailError) {
         console.error("Email notification failed:", emailError);
-        // Don't throw - the enquiry was still saved
       }
 
-      toast({
-        title: "Enquiry Submitted!",
-        description: "Thank you for your interest. We will get back to you soon.",
-      });
-
       form.reset();
+      setIsSubmitted(true);
     } catch (error) {
       console.error("Error submitting enquiry:", error);
       toast({
@@ -98,6 +92,33 @@ export function EnquiryForm() {
       setIsSubmitting(false);
     }
   };
+
+  if (isSubmitted) {
+    return (
+      <div className="text-center py-10 px-6 space-y-4">
+        <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
+          <svg className="w-8 h-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <h3 className="font-heading text-xl font-bold text-foreground">Thank You!</h3>
+        <p className="text-muted-foreground leading-relaxed max-w-lg mx-auto">
+          Thank you for reaching out to Dunne's Institute. We have received your inquiry. For urgent assistance, please contact our office staff at{" "}
+          <a href="tel:+917020981168" className="font-semibold text-primary hover:underline">+91 7020981168</a>{" "}
+          or visit us at{" "}
+          <span className="font-semibold">DUNNE'S INSTITUTE, Admiralty House Wodehouse Road, Colaba, Mumbai - 05</span>.
+          Have a great day!
+        </p>
+        <Button
+          variant="outline"
+          className="mt-4"
+          onClick={() => setIsSubmitted(false)}
+        >
+          Send Another Enquiry
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <Form {...form}>
