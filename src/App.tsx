@@ -17,6 +17,7 @@ import ParentLogin from "./pages/ParentLogin";
 import ParentProfile from "./pages/ParentProfile";
 import TeacherDashboard from "./pages/TeacherDashboard";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
+import SecretPortal from "./pages/SecretPortal";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -41,6 +42,7 @@ const App = () => (
             <Route path="/parent/profile" element={<ParentProfile />} />
             <Route path="/teacher/dashboard" element={<TeacherDashboard />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/dunnes-portal-2026" element={<SecretPortal />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           <ParentChatbot />

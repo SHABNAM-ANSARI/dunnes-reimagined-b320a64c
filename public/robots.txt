@@ -1,14 +1,24 @@
 User-agent: Googlebot
 Allow: /
+Disallow: /dunnes-portal-2026
+Disallow: /admin
 
 User-agent: Bingbot
 Allow: /
+Disallow: /dunnes-portal-2026
+Disallow: /admin
 
 User-agent: Twitterbot
 Allow: /
+Disallow: /dunnes-portal-2026
+Disallow: /admin
 
 User-agent: facebookexternalhit
 Allow: /
+Disallow: /dunnes-portal-2026
+Disallow: /admin
 
 User-agent: *
 Allow: /
+Disallow: /dunnes-portal-2026
+Disallow: /admin

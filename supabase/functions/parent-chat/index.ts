@@ -1,18 +1,14 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-const SCHOOL_CONTEXT = `You are a helpful assistant for Dunne's Institute, a prestigious school in Colaba, Mumbai established in 1949. 
-
-School Information:
-- Name: Dunne's Institute (ISO 9001:2000 Certified)
-- Motto: "Opus Vincet Omnia" (Work Conquers All)
-- Principal: Mrs. Kiran Singh (Noted Educationist)
-- Phone: 8527665593
-- Email: dunnesschool@gmail.com
+const STATIC_CONTEXT = `You are a helpful assistant for Dunne's Institute, a prestigious school in Colaba, Mumbai established in 1949.
+Motto: "Opus Vincet Omnia" (Work Conquers All)
+ISO 9001:2000 Certified
 
 Campuses:
 1. Pre-Primary Section: K. R. Cama Oriental Institute Building, Opp. Lion Gate, Near Kala Ghoda, Mumbai - 400023
@@ -21,18 +17,15 @@ Campuses:
 School Timings: Monday to Saturday, 8:00 AM - 3:00 PM
 
 Mission: To redefine education where learning is a pleasure and every child is encouraged to celebrate it.
-
 Values: Discipline, academic excellence, holistic development, and character building.
-
 Activities offered: Art & Craft, Music & Dance, Sports, Science Club, Literary activities, Computer Education, Environmental awareness programs.
 
-Admissions: 
+Admissions:
 - Open for Pre-Primary to Secondary sections
 - Parents should contact the school office for admission forms
 - Documents required: Birth certificate, previous school records, passport photos
-- Admission process includes interaction with parents and students
 
-Answer questions about the school helpfully and professionally. If you don't know specific details, suggest parents contact the school directly. Keep responses concise and friendly.`;
+Answer questions helpfully and professionally. If you don't know specific details, suggest parents contact the school directly. Keep responses concise and friendly.`;
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -42,10 +35,37 @@ serve(async (req) => {
   try {
     const { messages } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    
+
     if (!LOVABLE_API_KEY) {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
+
+    // Fetch dynamic settings from site_settings table
+    let dynamicContext = "";
+    try {
+      const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+      const supabaseKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+      const sb = createClient(supabaseUrl, supabaseKey);
+      const { data } = await sb.from("site_settings").select("key, value");
+      if (data && data.length > 0) {
+        const settings: Record<string, string> = {};
+        data.forEach((row: { key: string; value: string }) => {
+          settings[row.key] = row.value;
+        });
+        dynamicContext = `\n\nCurrent Contact Information (USE THESE, they are the latest):
+- Principal: ${settings["principal_name"] || "Mrs. Kiran Singh"}
+- Phone 1: ${settings["contact_phone_1"] || "+91 7020981168"}
+- Phone 2: ${settings["contact_phone_2"] || "+91 8527665593"}
+- Email: ${settings["contact_email"] || "dunnesschool@gmail.com"}
+- Address: ${settings["school_address"] || "Admiralty House, Wodehouse Road, Colaba, Mumbai - 05"}
+- Education Advisor: ${settings["education_advisor"] || "Mr. Shahbehram Khushrushahi"}
+- Fees Info: ${settings["school_fees_info"] || "Please contact the school office for detailed fee structure."}`;
+      }
+    } catch (e) {
+      console.error("Error fetching site settings for chatbot:", e);
+    }
+
+    const SCHOOL_CONTEXT = STATIC_CONTEXT + dynamicContext;
 
     console.log("Received chat request with", messages.length, "messages");
 
