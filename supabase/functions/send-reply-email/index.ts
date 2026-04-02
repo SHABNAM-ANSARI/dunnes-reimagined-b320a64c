@@ -47,11 +47,9 @@ const handler = async (req: Request): Promise<Response> => {
       { global: { headers: { Authorization: authHeader } } }
     );
 
-    const { data: claims, error: claimsError } = await supabase.auth.getClaims(
-      authHeader.replace("Bearer ", "")
-    );
+    const { data: { user: authUser }, error: userError } = await supabase.auth.getUser();
 
-    if (claimsError || !claims?.claims) {
+    if (userError || !authUser) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
         headers: { "Content-Type": "application/json", ...corsHeaders },
@@ -59,7 +57,7 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     // Verify admin role
-    const userId = claims.claims.sub as string;
+    const userId = authUser.id;
     const { data: isAdmin } = await supabase.rpc("has_role", {
       _user_id: userId,
       _role: "admin",

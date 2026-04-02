@@ -1,7 +1,15 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { MapPin, Phone, Mail, Clock, ArrowRight } from "lucide-react";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
+
 export function ContactSection() {
+  const { getSetting } = useSiteSettings();
+
+  const phone1 = getSetting("contact_phone_1", "+91 7020981168");
+  const email = getSetting("contact_email", "dunnesschool@gmail.com");
+  const address = getSetting("school_address", "Nathalal Parekh Marg, Admiralty House Wodehouse Road, Colaba Mumbai-400005");
+
   return <section className="py-16 md:py-24 bg-gradient-section">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
@@ -27,7 +35,7 @@ export function ContactSection() {
               Primary & Secondary Campus
             </h3>
             <p className="text-muted-foreground text-sm mb-4">
-              Nathalal Parekh Marg, Admiralty House Wodehouse Road, Colaba Mumbai-400005
+              {address}
             </p>
             <p className="text-xs text-muted-foreground">
               Std 1 to Std 10 (ICSE Board)
@@ -56,13 +64,13 @@ export function ContactSection() {
               Quick Contact
             </h3>
             <div className="space-y-4">
-              <a href="tel:8527665593" className="flex items-center gap-3 hover:text-secondary transition-colors">
+              <a href={`tel:${phone1.replace(/\s/g, '')}`} className="flex items-center gap-3 hover:text-secondary transition-colors">
                 <Phone className="h-5 w-5" />
-                <span>+91 7020981168</span>
+                <span>{phone1}</span>
               </a>
-              <a href="mailto:dunnesschool@gmail.com" className="flex items-center gap-3 hover:text-secondary transition-colors">
+              <a href={`mailto:${email}`} className="flex items-center gap-3 hover:text-secondary transition-colors">
                 <Mail className="h-5 w-5" />
-                <span>dunnesschool@gmail.com</span>
+                <span>{email}</span>
               </a>
               <div className="flex items-center gap-3">
                 <Clock className="h-5 w-5" />
