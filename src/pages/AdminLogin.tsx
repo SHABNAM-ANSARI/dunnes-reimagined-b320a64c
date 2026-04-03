@@ -20,13 +20,12 @@ export default function AdminLogin() {
   const { toast } = useToast();
 
   useEffect(() => {
-    if (!loading && user) {
-      if (isAdmin) {
-        navigate("/admin/dashboard");
-      } else if (!isSubmitting) {
-        // Only show error if user is authenticated but not admin and not currently submitting
-        setError("You do not have admin privileges. Contact the school administrator.");
-      }
+    if (loading) return;
+    if (user && isAdmin) {
+      navigate("/admin/dashboard", { replace: true });
+    } else if (user && !isAdmin && !isSubmitting) {
+      setError("You do not have admin privileges. Contact the school administrator.");
+      setIsSubmitting(false);
     }
   }, [user, isAdmin, loading, navigate, isSubmitting]);
 
