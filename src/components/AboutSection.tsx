@@ -59,36 +59,35 @@ export function AboutSection() {
 
           {/* Visual */}
           <div className="relative">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-4">
-                <div className="bg-primary rounded-xl p-6 text-primary-foreground shadow-lg">
-                  <h3 className="font-heading text-4xl font-bold mb-2">75+</h3>
+                <div className="bg-primary rounded-xl p-5 sm:p-6 text-primary-foreground shadow-lg">
+                  <h3 className="font-heading text-3xl sm:text-4xl font-bold mb-2">75+</h3>
                   <p className="text-sm text-primary-foreground/80">Years of Excellence</p>
                 </div>
-                <div className="bg-card rounded-xl p-6 shadow-lg border">
-                  <h3 className="font-heading text-xl font-bold text-foreground mb-2">Our Mission</h3>
+                <div className="bg-card rounded-xl p-5 sm:p-6 shadow-lg border">
+                  <h3 className="font-heading text-lg sm:text-xl font-bold text-foreground mb-2">Our Mission</h3>
                   <p className="text-sm text-muted-foreground">
                     To develop all-round academic acumen in a dynamically changing environment through education and multifaceted activities.
                   </p>
                 </div>
               </div>
-              <div className="space-y-4 pt-8">
-                <div className="bg-secondary rounded-xl p-6 text-secondary-foreground shadow-gold">
-                  <h3 className="font-heading text-xl font-bold mb-2">Our Vision</h3>
+              <div className="space-y-4 sm:pt-8">
+                <div className="bg-secondary rounded-xl p-5 sm:p-6 text-secondary-foreground shadow-gold">
+                  <h3 className="font-heading text-lg sm:text-xl font-bold mb-2">Our Vision</h3>
                   <p className="text-sm">
                     To be the premier ICSE Institute in moulding and nurturing students to excel in all spheres.
                   </p>
                 </div>
-                <div className="bg-card rounded-xl p-6 shadow-lg border">
-                  <h4 className="font-heading text-lg font-bold text-foreground mb-3">Current Leadership</h4>
+                <div className="bg-card rounded-xl p-5 sm:p-6 shadow-lg border">
+                  <h4 className="font-heading text-base sm:text-lg font-bold text-foreground mb-3">Current Leadership</h4>
                   <div className="space-y-3 text-sm">
                     <div className="text-muted-foreground">
-                      <span className="font-semibold text-foreground">Principal:</span>
+                      <p className="font-semibold text-foreground">Principal:</p>
                       <p className="mt-1">Mrs. Kiran Singh</p>
-                      <a href="tel:8527665593" className="text-secondary hover:underline">+91 8527665593</a>
                     </div>
                     <div className="text-muted-foreground">
-                      <span className="font-semibold text-foreground">Education Advisor:</span>
+                      <p className="font-semibold text-foreground">Education Advisor:</p>
                       <p className="mt-1">Mr. Shahbehram Khushrushahi</p>
                     </div>
                   </div>
