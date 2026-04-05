@@ -1,9 +1,20 @@
 import { Link } from "react-router-dom";
 import { Phone, Mail, MapPin, Clock, Award, Instagram } from "lucide-react";
 import schoolLogo from "@/assets/school-logo.jpeg";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
+
 export function Footer() {
-  return <footer className="bg-primary text-primary-foreground">
-      {/* Main footer */}
+  const { getSetting } = useSiteSettings();
+
+  const instagramUrl = getSetting(
+    "instagram_url",
+    "https://www.instagram.com/dunnes_institute_icse_school?utm_source=qr&igsh=ZHN1dW41b3gwMDZm"
+  );
+  const principalName = getSetting("principal_name", "Mrs. Kiran Singh");
+  const contactPhone = getSetting("principal_contact", "+91 77108192");
+
+  return (
+    <footer className="bg-primary text-primary-foreground">
       <div className="container mx-auto px-4 py-12 md:py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* School Info */}
@@ -23,7 +34,7 @@ export function Footer() {
               <span className="text-sm">ISO 9001:2000 Certified</span>
             </div>
             <div className="mt-4">
-              <a href="https://www.instagram.com/dunnes_institute_high_school?utm_source=qr&igsh=ZHN1dW41b3gwMDZm" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-primary-foreground/80 hover:text-secondary transition-colors">
+              <a href={instagramUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-primary-foreground/80 hover:text-secondary transition-colors">
                 <Instagram className="h-5 w-5" />
                 <span className="text-sm">Follow us on Instagram</span>
               </a>
@@ -34,29 +45,20 @@ export function Footer() {
           <div>
             <h4 className="font-heading text-lg font-semibold mb-4">Quick Links</h4>
             <ul className="space-y-2">
-              {[{
-              name: "About Us",
-              href: "/about"
-            }, {
-              name: "Admissions",
-              href: "/admissions"
-            }, {
-              name: "School Activities",
-              href: "/activities"
-            }, {
-              name: "Photo Gallery",
-              href: "/gallery"
-            }, {
-              name: "Contact Us",
-              href: "/contact"
-            }, {
-              name: "Privacy Policy",
-              href: "/privacy-policy"
-            }].map(link => <li key={link.name}>
+              {[
+                { name: "About Us", href: "/about" },
+                { name: "Admissions", href: "/admissions" },
+                { name: "School Activities", href: "/activities" },
+                { name: "Photo Gallery", href: "/gallery" },
+                { name: "Contact Us", href: "/contact" },
+                { name: "Privacy Policy", href: "/privacy-policy" },
+              ].map((link) => (
+                <li key={link.name}>
                   <Link to={link.href} className="text-sm text-primary-foreground/80 hover:text-secondary transition-colors">
                     {link.name}
                   </Link>
-                </li>)}
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -72,7 +74,9 @@ export function Footer() {
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="h-5 w-5 text-secondary flex-shrink-0" />
-                <a href="tel:8527665593" className="text-sm text-primary-foreground/80 hover:text-secondary transition-colors">+91 77108192</a>
+                <a href={`tel:${contactPhone.replace(/\s/g, "")}`} className="text-sm text-primary-foreground/80 hover:text-secondary transition-colors">
+                  {contactPhone}
+                </a>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="h-5 w-5 text-secondary flex-shrink-0" />
@@ -113,9 +117,10 @@ export function Footer() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-primary-foreground/60">
             <p>© {new Date().getFullYear()} Dunne's Institute. All rights reserved.</p>
-            <p>Principal: Mrs. Kiran Singh (Noted Educationist)</p>
+            <p>Principal: {principalName} (Noted Educationist)</p>
           </div>
         </div>
       </div>
-    </footer>;
+    </footer>
+  );
 }

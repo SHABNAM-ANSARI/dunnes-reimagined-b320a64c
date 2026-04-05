@@ -323,10 +323,15 @@ export default function SecretPortal() {
   const handleSaveSettings = async () => {
     setIsSavingSettings(true);
     try {
-      for (const setting of siteSettings) {
-        const newValue = editedSettings[setting.key];
-        if (newValue !== undefined && newValue !== setting.value) {
-          await supabase.from("site_settings").update({ value: newValue }).eq("key", setting.key);
+      const existingKeys = siteSettings.map((s) => s.key);
+      for (const [key, value] of Object.entries(editedSettings)) {
+        if (existingKeys.includes(key)) {
+          const original = siteSettings.find((s) => s.key === key);
+          if (original && value !== original.value) {
+            await supabase.from("site_settings").update({ value }).eq("key", key);
+          }
+        } else if (value) {
+          await supabase.from("site_settings").insert({ key, value });
         }
       }
       toast({ title: "Settings Saved", description: "All changes have been saved. They will reflect across the website." });
