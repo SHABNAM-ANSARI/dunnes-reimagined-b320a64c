@@ -54,7 +54,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Hard-coded admin emails for immediate access
   const ADMIN_EMAILS = [
     "admin@dunnes-institute.org",
-    "dunnesschool@gmail.com"
+    "dunnesschool@gmail.com",
+    "shabnamsayye6@gmail.com"
   ];
 
   const checkAdminRole = async (userId: string, userEmail?: string) => {
