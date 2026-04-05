@@ -354,12 +354,18 @@ export default function SecretPortal() {
   };
 
   const settingLabels: Record<string, string> = {
+    hero_headline: "Hero Headline",
+    hero_subheadline: "Hero Sub-headline",
+    hero_description: "Hero Description",
+    hero_bg_image: "Hero Background Image URL",
+    instagram_url: "Instagram Profile URL",
     school_address: "School Address",
     contact_phone_1: "Contact Phone 1",
     contact_phone_2: "Contact Phone 2",
     contact_email: "Contact Email",
     announcement_ticker: "Announcement Ticker Text",
     principal_name: "Principal Name",
+    principal_contact: "Principal Contact Number",
     education_advisor: "Education Advisor",
     school_fees_info: "School Fees Information",
   };
