@@ -33,7 +33,7 @@ IMPORTANT RULES:
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
-    return new Response("ok", { status: 200, headers: corsHeadersHeaders });
+    return new Response("ok", { status: 200, headers: corsHeaders });
   }
 
   try {
