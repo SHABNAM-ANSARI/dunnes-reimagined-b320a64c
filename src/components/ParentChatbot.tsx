@@ -44,17 +44,24 @@ export function ParentChatbot() {
     let assistantContent = "";
 
     try {
+      console.log("[Chatbot] Sending request to:", CHAT_URL);
+      console.log("[Chatbot] Using Supabase URL:", import.meta.env.VITE_SUPABASE_URL);
+      console.log("[Chatbot] Anon key present:", !!import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY);
+
       const resp = await fetch(CHAT_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
         },
         body: JSON.stringify({ messages: newMessages }),
       });
 
       if (!resp.ok || !resp.body) {
-        throw new Error("Failed to get response");
+        const errorText = await resp.text().catch(() => "Could not read error body");
+        console.error("[Chatbot] Request failed:", { status: resp.status, statusText: resp.statusText, errorText, url: CHAT_URL });
+        throw new Error(`Failed: ${resp.status} ${resp.statusText} - ${errorText}`);
       }
 
       const reader = resp.body.getReader();
