@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import { ParentChatbot } from "@/components/ParentChatbot";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 import Index from "./pages/Index";
 import About from "./pages/About";
 import Activities from "./pages/Activities";
@@ -45,6 +46,7 @@ const App = () => (
             <Route path="/dunnes-portal-2026" element={<SecretPortal />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <WhatsAppButton />
           <ParentChatbot />
         </AuthProvider>
       </BrowserRouter>
