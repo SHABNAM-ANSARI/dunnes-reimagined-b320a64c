@@ -46,6 +46,7 @@ const App = () => (
             <Route path="/dunnes-portal-2026" element={<SecretPortal />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <WhatsAppButton />
           <ParentChatbot />
         </AuthProvider>
       </BrowserRouter>
