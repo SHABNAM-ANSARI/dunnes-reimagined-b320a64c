@@ -74,9 +74,9 @@ export function Footer() {
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="h-5 w-5 text-secondary flex-shrink-0" />
-                <a href={`tel:${contactPhone.replace(/\s/g, "")}`} className="text-sm text-primary-foreground/80 hover:text-secondary transition-colors">
-                  {contactPhone}
-                </a>
+               <a href="tel:+917020981168" className="text-sm text-primary-foreground/80 hover:text-secondary transition-colors">
+               +91 7020981168   
+                </a>               
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="h-5 w-5 text-secondary flex-shrink-0" />
